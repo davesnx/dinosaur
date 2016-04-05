@@ -1,0 +1,4 @@
+export const ACTIVE_QUESTION = 'ACTIVE_QUESTION'
+export const ANSWER_QUESTION = 'ANSWER_QUESTION'
+export const LOAD_FORM = 'LOAD_FORM'
+export const SUBMIT_FORM = 'SUBMIT_FORM'
