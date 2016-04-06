@@ -1,7 +1,7 @@
 import { createStore } from 'redux'
 import gameReducer from 'reducers/reducers'
 
-export default function configureStore (initialState) {
+function configureStore (initialState) {
   const store = createStore(gameReducer, initialState)
 
   if (module.hot) {
@@ -14,3 +14,5 @@ export default function configureStore (initialState) {
 
   return store
 }
+
+export default configureStore

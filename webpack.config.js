@@ -15,12 +15,13 @@ const PATH = {
 }
 
 module.exports = {
+  devtool: 'eval',
   debug: DEBUG,
   process: true,
+  inline: true,
   stats: {
     colors: true
   },
-  devtool: 'eval-source-map',
   entry: {
     dino: path.resolve(PATH.client, 'main.js')
   },
@@ -67,12 +68,7 @@ module.exports = {
       }
     }, {
       test: /\.scss$/,
-      loader: ExtractTextPlugin.extract(
-        'style',
-        'css',
-        'sass',
-        { allChunks: true }
-      )
+      loaders: ['style', 'css', 'sass']
     }]
   },
   devServer: {

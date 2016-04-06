@@ -1,0 +1,21 @@
+@import '_generic.base';
+@import '_generic.normalize';
+
+#dinosaur {
+  width: 800px;
+  height: 600px;
+  margin: 0 auto;
+}
+
+.mask {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.movement {
+  // http://fourkitchens.com/blog/article/fix-scrolling-performance-css-will-change-property
+  background: url(http://designroast.org/wp-content/uploads/2014/02/pattern-patternizer.png) repeat;
+  width: 50000px;
+  height: 100%;
+}

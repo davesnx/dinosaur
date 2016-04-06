@@ -2,6 +2,8 @@ import React, { Component, PropTypes } from 'react'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import * as actions from 'actions/actions'
+import Background from 'components/Background'
+import '../style/main.scss'
 
 class Dino extends Component {
   constructor (props) {
@@ -10,15 +12,12 @@ class Dino extends Component {
 
   render () {
     return (
-      <section className='main'>
-        <h1>Dino world!</h1>
-      </section>
+      <Background />
     )
   }
 }
 
 Dino.propTypes = {
-  form: PropTypes.object.isRequired,
   actions: PropTypes.object.isRequired
 }
 

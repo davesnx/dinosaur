@@ -1,5 +1,4 @@
-import React, { PropTypes } from 'react'
-import classNames from 'classNames'
+import React from 'react'
 import PureRenderComponent from 'react-pure-render/component'
 
 class Background extends PureRenderComponent {
@@ -12,12 +11,12 @@ class Background extends PureRenderComponent {
     }
   }
 
-  componentDidUpdate () {
-    console.log('block')
-  }
-
   render () {
-    return (<div>dino!</div>)
+    return (
+      <div className='mask'>
+        <div className='movement'></div>
+      </div>
+    )
   }
 }
 
