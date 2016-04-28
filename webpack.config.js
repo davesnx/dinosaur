@@ -1,9 +1,7 @@
-const dotenv = require('dotenv')
+require('dotenv').config()
 const webpack = require('webpack')
 const path = require('path')
-const ExtractTextPlugin = require('extract-text-webpack-plugin')
-
-dotenv.config()
+// const ExtractTextPlugin = require('extract-text-webpack-plugin')
 
 const DEBUG = process.env.DEBUG
 const ENV = process.env.ENV
@@ -15,29 +13,26 @@ const PATH = {
 }
 
 module.exports = {
-  devtool: 'eval',
+  devtool: 'inline-source-map',
   debug: DEBUG,
   process: true,
   inline: true,
   stats: {
     colors: true
   },
-  entry: {
-    dino: path.resolve(PATH.client, 'main.js')
-  },
+  entry: [
+    'webpack/hot/only-dev-server',
+    path.resolve(PATH.client, 'main.js')
+  ],
   output: {
     path: PATH.build,
     filename: 'bundle.js',
     publicPath: '/'
   },
   plugins: [
-    new webpack.HotModuleReplacementPlugin(),
-    new webpack.optimize.OccurenceOrderPlugin(),
-    new webpack.NoErrorsPlugin()
-    // new webpack.HotModuleReplacementPlugin(),
     // new webpack.SourceMapDevToolPlugin({
     //   path: path.resolve(__dirname, PATH.build),
-    //   filename: '[name].js.map'
+    //   filename: '[name].map'
     // }),
     // new ExtractTextPlugin('styles.css'),
     // new webpack.optimize.UglifyJsPlugin({
@@ -48,18 +43,20 @@ module.exports = {
     //     comments: false
     //   }
     // }),
-    // new webpack.optimize.DedupePlugin(),
-    // new webpack.DefinePlugin({
-    //   'process.env': {
-    //     NODE_ENV: JSON.stringify(ENV)
-    //   }
-    // })
+    new webpack.HotModuleReplacementPlugin(),
+    new webpack.NoErrorsPlugin(),
+    new webpack.optimize.OccurenceOrderPlugin(),
+    new webpack.optimize.DedupePlugin(),
+    new webpack.DefinePlugin({
+      'process.env': {
+        NODE_ENV: JSON.stringify(ENV)
+      }
+    })
   ],
   module: {
     loaders: [{
       test: /\.js$/,
       exclude: /node_modules/,
-      include: __dirname,
       loader: 'babel',
       query: {
         cacheDirectory: false,
@@ -68,11 +65,12 @@ module.exports = {
       }
     }, {
       test: /\.scss$/,
-      loaders: ['style', 'css', 'sass']
+      loaders: ['style', 'css', 'resolve-url', 'sass']
     }]
   },
   devServer: {
-    contentBase: PATH.client
+    contentBase: PATH.client,
+    port: 4567
   },
   watchOptions: {
     poll: true
@@ -81,5 +79,11 @@ module.exports = {
     root: path.resolve('./'),
     modulesDirectories: ['app/client', 'node_modules'],
     extensions: ['', '.js', '.json']
+  },
+  sassLoader: {
+    includePaths: [
+      path.join(PATH.client, 'css'),
+      path.resolve('node_modules', 'compass-mixins/lib')
+    ]
   }
 }
