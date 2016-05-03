@@ -20,6 +20,7 @@ export function jump () {
 
 export function move () {
   return {
-    type: MOVE
+    type: MOVE,
+    payload: {}
   }
 }

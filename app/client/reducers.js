@@ -7,7 +7,7 @@ const N_TICKS = 1000
 const generateTicks = (leng) => {
   return _.fill(Array(leng), {})
     .map((t, i) => {
-      if (i % 2 === 0) return { haveEnemy: true }
+      if (i % 10 === 0 && i >= 20) return { haveEnemy: true, type: _.random(0, 3) }
       else return { haveEnemy: false }
     })
 }

@@ -1,35 +1,27 @@
-import { put, call, take, select, fork } from 'redux-saga/effects'
+import { delay } from 'redux-saga'
+import { put, call, cancel, take, select, fork } from 'redux-saga/effects'
 import { START, STARTED, STOP, STOPED, MOVE } from 'constants'
 
 const ONE_SEC = 1000
 
-const delay = (time) => (
-  new Promise((resolve) => {
-    setTimeout(() => resolve(), time)
-  })
-)
-
-function * standBy (getState) {
-  if (yield take(START)) {
-    while (true && getState().status === STARTED) {
-      yield call(delay, ONE_SEC) // ONE_SEC / 10
-      yield put({ type: MOVE })
-    }
-  }
-}
-
-function* gameSaga(getState) {
+function * movement () {
   while (true) {
-    yield take(PLAY);
-    yield put(reset());
-    const running = yield fork(gameLoop, getState);
-    yield take(GAME_OVER);
-    yield cancel(running);
+    yield call(delay, ONE_SEC / 12)
+    yield put({ type: MOVE })
   }
 }
 
-export default function * sagas (getState) {
+function * gameLoop () {
+  while (true) {
+    yield take(START)
+    const moving = yield fork(movement)
+    yield take(STOP)
+    yield cancel(moving)
+  }
+}
+
+export default function * sagas () {
   yield [
-    fork(standBy.bind(getState, getState))
+    fork(gameLoop)
   ]
 }

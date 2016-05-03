@@ -1,11 +1,18 @@
 import React from 'react'
 import PureRenderComponent from 'react-pure-render/component'
 import className from 'classnames'
+import Enemy from 'Enemy'
 
 class Background extends PureRenderComponent {
   renderBackground (t, i) {
     const classes = className('c-tick', { 'have-enemy': t.haveEnemy === true })
-    return (<div key={i} className={classes} />)
+    const enemy = t.haveEnemy ? (<Enemy className='js-enemy' type={t.type} />) : null
+    return (
+      <div key={i} className={classes}>
+        {enemy}
+        <hr className='c-floor'/>
+      </div>
+    )
   }
 
   renderBackgroundList (ticks) {
