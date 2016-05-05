@@ -59,10 +59,9 @@ function game (state = INITIAL_STATE, action) {
         }
       }
     case ACTIONS.IS_COLLISION:
-      const collision = isCollision(action.payload)
       return {
         ...state,
-        dino: { status: (collision ? DEATH) }
+        dino: { status: isCollision(action.payload) }
       }
     default:
       return state
