@@ -12,15 +12,6 @@ import 'styles/main.scss'
 
 const JUMP_TIME = 400
 
-const isCollision = (firstElem, secondElem) => {
-  const f = firstElem.getBoundingClientRect()
-  const s = secondElem.getBoundingClientRect()
-  return !(
-    ((f.top + f.height) < (s.top)) || (f.top > (s.top + s.height)) ||
-    ((f.left + f.width) < s.left) || (f.left > (s.left + s.width))
-  )
-}
-
 class Game extends Component {
   constructor (props) {
     super(props)
@@ -40,24 +31,6 @@ class Game extends Component {
     if (this.state.isJumping !== true) {
       this.setState({ isJumping: true })
     }
-  }
-
-  listenCollision (cb) {
-    const dinoDOMNode = document.querySelector('.js-dino')
-    return new Promise((resolve, reject) => {
-      const collissionLoop = setInterval(() => {
-        if (true) {
-          let firsEnemyDOMNode = document.querySelectorAll('.c-enemy')[0]
-          let c = isCollision(dinoDOMNode, firsEnemyDOMNode)
-          console.log(`Dino and Enemy[0] collision: ${c}`)
-          resolve(c)
-        }
-      }, 1000)
-    })
-  }
-
-  componentDidMount () {
-    this.listenCollision()
   }
 
   componentDidUpdate (prevProps, prevState) {
@@ -88,11 +61,11 @@ class Game extends Component {
   }
 }
 
-function mapStateToProps (state) {
+const mapStateToProps = (state) => {
   return state
 }
 
-function mapDispatchToProps (dispatch) {
+const mapDispatchToProps = (dispatch) => {
   return {
     actions: bindActionCreators(actions, dispatch)
   }

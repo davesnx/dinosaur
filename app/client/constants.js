@@ -1,8 +1,14 @@
-export const START = 'START'
-export const STOP = 'STOP'
+export const ACTIONS = {
+  START: 'START',
+  STOP: 'STOP',
+  JUMP: 'JUMP',
+  MOVE: 'MOVE',
+  IS_COLLISION: 'IS_COLLISION'
+}
 
-export const JUMP = 'JUMP'
-export const MOVE = 'MOVE'
-
-export const STARTED = 'STARTED'
-export const STOPED = 'STOPED'
+export const STATE = {
+  STARTED: 'STARTED',
+  STOPED: 'STOPED',
+  ALIVE: 'ALIVE',
+  DEATH: 'DEATH'
+}

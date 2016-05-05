@@ -1,26 +1,36 @@
-import { START, STOP, JUMP, MOVE } from 'constants'
+import { ACTIONS } from 'constants'
 
 export function start () {
   return {
-    type: START
+    type: ACTIONS.START
   }
 }
 
 export function stop () {
   return {
-    type: STOP
+    type: ACTIONS.STOP
   }
 }
 
 export function jump () {
   return {
-    type: JUMP
+    type: ACTIONS.JUMP
   }
 }
 
 export function move () {
   return {
-    type: MOVE,
+    type: ACTIONS.MOVE,
     payload: {}
+  }
+}
+
+export function checkCollision ({ dino, firstEnemy }) {
+  return {
+    type: ACTIONS.IS_COLLISION,
+    payload: {
+      dino,
+      firstEnemy
+    }
   }
 }

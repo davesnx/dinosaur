@@ -1,4 +1,4 @@
-import { START, STARTED, STOP, STOPED, JUMP, MOVE } from 'constants'
+import { ACTIONS, STATE } from 'constants'
 import _ from 'lodash'
 // import {freeze} from 'freezr'
 
@@ -13,29 +13,56 @@ const generateTicks = (leng) => {
 }
 
 const INITIAL_STATE = {
-  'distance': 0,
-  'status': STOPED,
-  'death': false,
-  'ticks': {
-    all: generateTicks(N_TICKS),
-    subset: []
+  distance: 0,
+  game: {
+    status: STATE.STOPED
+  },
+  dino: {
+    status: STATE.ALIVE,
+    isJumping: true
+  },
+  ticks: {
+    all: generateTicks(N_TICKS)
+    // subset: [] // For create a pagination number of ticks!
   }
+}
+
+const isCollision = (f, s) => {
+  return !(
+    ((f.top + f.height) < (s.top)) || (f.top > (s.top + s.height)) ||
+    ((f.left + f.width) < s.left) || (f.left > (s.left + s.width))
+  )
 }
 
 function game (state = INITIAL_STATE, action) {
   switch (action.type) {
-    case START:
-      return { ...state, 'status': STARTED }
-    case STOP:
-      return { ...state, 'status': STOPED }
-    case JUMP:
-      return { ...state, 'isJumping': true }
-    case MOVE:
+    case ACTIONS.START:
+      return {
+        ...state,
+        game: { status: STATE.STARTED }
+      }
+    case ACTIONS.STOP:
+      return {
+        ...state,
+        game: { status: STATE.STOPED }
+      }
+    case ACTIONS.JUMP:
+      return {
+        ...state,
+        dino: { isJumping: true }
+      }
+    case ACTIONS.MOVE:
       return {
         distance: N_TICKS - state.ticks.all.length,
         ticks: {
           all: [...state.ticks.all.splice(1)]
         }
+      }
+    case ACTIONS.IS_COLLISION:
+      const collision = isCollision(action.payload)
+      return {
+        ...state,
+        dino: { status: (collision ? DEATH) }
       }
     default:
       return state
