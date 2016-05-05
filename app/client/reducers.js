@@ -4,6 +4,9 @@ import _ from 'lodash'
 
 const N_TICKS = 1000
 
+// TODO: Create the reducer for generateTicks with more parameters
+//       - Implement the subset of ticks!
+//       - Create also the action for upgrade level(?)
 const generateTicks = (leng) => {
   return _.fill(Array(leng), {})
     .map((t, i) => {
@@ -59,6 +62,7 @@ function game (state = INITIAL_STATE, action) {
         }
       }
     case ACTIONS.IS_COLLISION:
+      // TODO: isCollision return Boolean not STATE.DEATH/ALIVE
       return {
         ...state,
         dino: { status: isCollision(action.payload) }

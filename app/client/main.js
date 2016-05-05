@@ -4,11 +4,11 @@ import ReactDOM from 'react-dom'
 import { Provider } from 'react-redux'
 import { createStore, compose, applyMiddleware } from 'redux'
 import createSagaMiddleware from 'redux-saga'
+import createLogger from 'redux-logger'
 
 import Game from 'Game'
 import game from 'reducers'
 import sagas from 'sagas'
-import createLogger from 'redux-logger'
 
 const logger = createLogger({ collapsed: true })
 const sagaMiddleware = createSagaMiddleware()

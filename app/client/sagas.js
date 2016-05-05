@@ -8,7 +8,7 @@ function * movement () {
   while (true) {
     yield call(delay, ONE_SEC) // ONE_SEC / 12
     yield put({ type: MOVE })
-    yield take(IS_COLLISION)
+    // yield take(IS_COLLISION)
   }
 }
 
@@ -16,6 +16,7 @@ function * gameLoop () {
   while (true) {
     yield take(START)
     const moving = yield fork(movement)
+    // FIXME: Not working :(
     yield race([
       yield take(STOP),
       yield take(IS_COLLISION)
