@@ -8,6 +8,13 @@ import Dino from 'Dino'
 import Background from 'Background'
 import Distance from 'Distance'
 
+import { Motion, spring } from 'react-motion'
+
+const DINO_BOTTOM_POSITION = 80
+const DINO_JUMP_POSITION = 200
+
+// import keydown from 'react-keydown'
+
 import 'styles/main.scss'
 
 const JUMP_TIME = 400
@@ -21,10 +28,6 @@ class Game extends Component {
 
   static propTypes = {
     actions: PropTypes.object.isRequired
-  }
-
-  _bindKeyEvents (cb) {
-    // window.addEventListener('keypress', cb)
   }
 
   _jump () {
@@ -41,19 +44,26 @@ class Game extends Component {
     }
   }
 
+  lola (event) {
+    if (event) console.log('lola?', event)
+  }
+
   render () {
     const { start, stop } = this.props.actions
     const { ticks, distance } = this.props
-    // ::this.bindKeyEvents(this._jump)
+    const position = this.state.isJumping ? DINO_JUMP_POSITION : DINO_BOTTOM_POSITION
 
     return (
-      <div className='c-overlay'>
+      <div className='c-overlay' onKeyDown={::this.lola}>
         <button onClick={start}>Start</button>
         <button onClick={stop}>Stop</button>
-        <button style={{float: 'right'}} onClick={::this._jump}>Jump</button>
         <div className='o-render-area  u-mask'>
           <Distance points={distance}/>
-          <Dino refs='dino' isJumping={this.state.isJumping}/>
+          <Motion style={{ position: spring(position, [20, 200]) }}>
+            {({ position }) => {
+              return (<Dino style={{transform: `translateY(${-position}px)`}} />)
+            }}
+          </Motion>
           <Background ticks={ticks} />
         </div>
       </div>

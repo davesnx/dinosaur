@@ -1,4 +1,4 @@
-export const ACTIONS = {
+export const ACTION = {
   START: 'START',
   STOP: 'STOP',
   JUMP: 'JUMP',

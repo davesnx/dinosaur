@@ -5,8 +5,11 @@
 @import 'lib/_animate';
 
 .o-game {
-  width: 800px;
+  width: 100%;
+  max-width: 820px;
   height: 400px;
+  padding: 0 10px;
+  box-sizing: border-box;
   margin: 50px auto;
 }
 

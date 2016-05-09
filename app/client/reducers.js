@@ -1,4 +1,4 @@
-import { ACTIONS, STATE } from 'constants'
+import { ACTION, STATE } from 'constants'
 import _ from 'lodash'
 // import {freeze} from 'freezr'
 
@@ -39,29 +39,29 @@ const isCollision = (f, s) => {
 
 function game (state = INITIAL_STATE, action) {
   switch (action.type) {
-    case ACTIONS.START:
+    case ACTION.START:
       return {
         ...state,
         game: { status: STATE.STARTED }
       }
-    case ACTIONS.STOP:
+    case ACTION.STOP:
       return {
         ...state,
         game: { status: STATE.STOPED }
       }
-    case ACTIONS.JUMP:
+    case ACTION.JUMP:
       return {
         ...state,
         dino: { isJumping: true }
       }
-    case ACTIONS.MOVE:
+    case ACTION.MOVE:
       return {
         distance: N_TICKS - state.ticks.all.length,
         ticks: {
           all: [...state.ticks.all.splice(1)]
         }
       }
-    case ACTIONS.IS_COLLISION:
+    case ACTION.IS_COLLISION:
       // TODO: isCollision return Boolean not STATE.DEATH/ALIVE
       return {
         ...state,

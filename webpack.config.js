@@ -5,6 +5,7 @@ const path = require('path')
 
 const DEBUG = process.env.DEBUG
 const ENV = process.env.ENV
+const PORT = process.env.PORT
 
 const PATH = {
   src: path.resolve(__dirname, 'app'),
@@ -13,7 +14,7 @@ const PATH = {
 }
 
 module.exports = {
-  devtool: 'inline-source-map',
+  devtool: 'eval',
   debug: DEBUG,
   process: true,
   inline: true,
@@ -21,13 +22,14 @@ module.exports = {
     colors: true
   },
   entry: [
+    `webpack-dev-server/client?http://localhost:${PORT}`,
     'webpack/hot/only-dev-server',
     path.resolve(PATH.client, 'main.js')
   ],
   output: {
     path: PATH.build,
     filename: 'bundle.js',
-    publicPath: '/'
+    publicPath: '/public/'
   },
   plugins: [
     // new webpack.SourceMapDevToolPlugin({
@@ -57,12 +59,7 @@ module.exports = {
     loaders: [{
       test: /\.js$/,
       exclude: /node_modules/,
-      loader: 'babel',
-      query: {
-        cacheDirectory: false,
-        // !(ENV === 'prod') ? path.resolve(__dirname, 'assets/cache') : false,
-        presets: ['es2015', 'stage-0', 'react']
-      }
+      loaders: ['react-hot', 'babel']
     }, {
       test: /\.scss$/,
       loaders: ['style', 'css', 'resolve-url', 'sass']
@@ -70,7 +67,9 @@ module.exports = {
   },
   devServer: {
     contentBase: PATH.client,
-    port: 4567
+    port: PORT,
+    hot: true,
+    historyApiFallback: true
   },
   watchOptions: {
     poll: true
