@@ -1,28 +1,22 @@
 import React, { Component, PropTypes } from 'react'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
-import { throttle } from 'lodash'
+// import { throttle } from 'lodash'
+import { Motion, spring } from 'react-motion'
 import * as actions from 'actions'
 
 import Dino from 'Dino'
 import Background from 'Background'
 import Distance from 'Distance'
-
-import { Motion, spring } from 'react-motion'
+import 'styles/main.scss'
 
 const DINO_BOTTOM_POSITION = 80
 const DINO_JUMP_POSITION = 200
-
-// import keydown from 'react-keydown'
-
-import 'styles/main.scss'
-
 const JUMP_TIME = 400
 
 class Game extends Component {
   constructor (props) {
     super(props)
-    this._jump = throttle(this._jump, JUMP_TIME * 2)
     this.state = { isJumping: false }
   }
 
@@ -36,6 +30,20 @@ class Game extends Component {
     }
   }
 
+  _onKeyDown (keyEvent) {
+    if (keyEvent.which === 32) {
+      this._jump()
+    }
+  }
+
+  componentDidMount () {
+    document.addEventListener('keydown', ::this._onKeyDown)
+  }
+
+  componentWillUnmount () {
+    document.removeEventListener('keydown', ::this.__onKeyDown)
+  }
+
   componentDidUpdate (prevProps, prevState) {
     if (prevState.isJumping !== this.state.isJumping && this.state.isJumping === true) {
       setTimeout(() => {
@@ -44,17 +52,13 @@ class Game extends Component {
     }
   }
 
-  lola (event) {
-    if (event) console.log('lola?', event)
-  }
-
   render () {
     const { start, stop } = this.props.actions
     const { ticks, distance } = this.props
     const position = this.state.isJumping ? DINO_JUMP_POSITION : DINO_BOTTOM_POSITION
 
     return (
-      <div className='c-overlay' onKeyDown={::this.lola}>
+      <div className='c-overlay'>
         <button onClick={start}>Start</button>
         <button onClick={stop}>Stop</button>
         <div className='o-render-area  u-mask'>
@@ -81,4 +85,7 @@ const mapDispatchToProps = (dispatch) => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Game)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Game)

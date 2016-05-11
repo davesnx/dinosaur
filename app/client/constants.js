@@ -3,7 +3,7 @@ export const ACTION = {
   STOP: 'STOP',
   JUMP: 'JUMP',
   MOVE: 'MOVE',
-  IS_COLLISION: 'IS_COLLISION'
+  CHECK_COLLISION: 'CHECK_COLLISION'
 }
 
 export const STATE = {

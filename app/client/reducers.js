@@ -22,7 +22,7 @@ const INITIAL_STATE = {
   },
   dino: {
     status: STATE.ALIVE,
-    isJumping: true
+    isJumping: false
   },
   ticks: {
     all: generateTicks(N_TICKS)
@@ -39,34 +39,37 @@ const isCollision = (f, s) => {
 
 function game (state = INITIAL_STATE, action) {
   switch (action.type) {
+
     case ACTION.START:
       return {
         ...state,
         game: { status: STATE.STARTED }
       }
+
     case ACTION.STOP:
       return {
         ...state,
         game: { status: STATE.STOPED }
       }
+
     case ACTION.JUMP:
       return {
         ...state,
         dino: { isJumping: true }
       }
+
     case ACTION.MOVE:
       return {
+        ...state,
+        dino: {
+          status: isCollision(action.payload) ? STATE.DEATH : STATE.ALIVE
+        },
         distance: N_TICKS - state.ticks.all.length,
         ticks: {
           all: [...state.ticks.all.splice(1)]
         }
       }
-    case ACTION.IS_COLLISION:
-      // TODO: isCollision return Boolean not STATE.DEATH/ALIVE
-      return {
-        ...state,
-        dino: { status: isCollision(action.payload) }
-      }
+
     default:
       return state
   }

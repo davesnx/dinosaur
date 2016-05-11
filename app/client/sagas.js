@@ -6,9 +6,8 @@ const ONE_SEC = 1000
 
 function * movement () {
   while (true) {
-    yield call(delay, ONE_SEC / 2) // ONE_SEC / 12
+    yield call(delay, ONE_SEC / 6) // ONE_SEC / 12
     yield put({ type: ACTION.MOVE })
-    // yield take(IS_COLLISION)
   }
 }
 
