@@ -25,12 +25,12 @@ export function move () {
   }
 }
 
-export function checkCollision ({ dino, firstEnemy }) {
-  return {
-    type: ACTION.IS_COLLISION,
-    payload: {
-      dino,
-      firstEnemy
-    }
-  }
-}
+// export function checkCollision ({ dino, firstEnemy }) {
+//   return {
+//     type: ACTION.IS_COLLISION,
+//     payload: {
+//       dino,
+//       firstEnemy
+//     }
+//   }
+// }
