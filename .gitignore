@@ -53,5 +53,6 @@ coverage
 dist/
 public/
 reduxSrc/
+old_client/
 
 .env
