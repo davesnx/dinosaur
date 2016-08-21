@@ -8,9 +8,9 @@ const ENV = process.env.ENV
 const PORT = process.env.PORT
 
 const PATH = {
-  src: path.resolve(__dirname, 'app'),
-  client: path.resolve(__dirname, 'app', 'client'),
-  build: path.resolve(__dirname, 'dist')
+  src: path.join(__dirname, 'src'),
+  client: path.join(__dirname, 'src', 'client'),
+  build: path.join(__dirname, 'dist')
 }
 
 module.exports = {
@@ -24,7 +24,7 @@ module.exports = {
   entry: [
     `webpack-dev-server/client?http://localhost:${PORT}`,
     'webpack/hot/only-dev-server',
-    path.resolve(PATH.client, 'main.js')
+    path.join(PATH.client, 'App.js')
   ],
   output: {
     path: PATH.build,
@@ -56,6 +56,11 @@ module.exports = {
     })
   ],
   module: {
+    postLoaders: [
+      {
+        loader: 'transform?brfs'
+      }
+    ],
     loaders: [{
       test: /\.js$/,
       exclude: /node_modules/,
@@ -68,8 +73,7 @@ module.exports = {
   devServer: {
     contentBase: PATH.client,
     port: PORT,
-    hot: true,
-    historyApiFallback: true
+    hot: true
   },
   watchOptions: {
     poll: true
