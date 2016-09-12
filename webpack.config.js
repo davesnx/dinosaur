@@ -56,18 +56,10 @@ module.exports = {
     })
   ],
   module: {
-    postLoaders: [
-      {
-        loader: 'transform?brfs'
-      }
-    ],
     loaders: [{
       test: /\.js$/,
       exclude: /node_modules/,
-      loaders: ['react-hot', 'babel']
-    }, {
-      test: /\.scss$/,
-      loaders: ['style', 'css', 'resolve-url', 'sass']
+      loaders: ['babel']
     }]
   },
   devServer: {
@@ -82,11 +74,5 @@ module.exports = {
     root: path.resolve('./'),
     modulesDirectories: ['app/client', 'node_modules'],
     extensions: ['', '.js', '.json']
-  },
-  sassLoader: {
-    includePaths: [
-      path.join(PATH.client, 'css'),
-      path.resolve('node_modules', 'compass-mixins/lib')
-    ]
   }
 }
