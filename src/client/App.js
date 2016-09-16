@@ -56,13 +56,11 @@ class App extends Component {
 
   render () {
     return (
-      <div style={}>
+      <div>
         {/* <Distance points={23} /> */}
         <Loop>
           <Stage width={1024} height={576}>
-            {/* <World> */}
-              <Enemy />
-            {/* </World> */}
+            <Enemy />
           </Stage>
         </Loop>
       </div>
