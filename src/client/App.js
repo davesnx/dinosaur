@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { render } from 'react-dom'
 import Radium from 'radium'
-import { Loop, Stage, World, Body } from 'react-game-kit'
+import { Loop, Stage, World } from 'react-game-kit'
 import Konva from 'konva'
 
 // import Background from './Background'
@@ -9,7 +9,8 @@ import Konva from 'konva'
 import Enemy from './Enemy'
 
 const appStyles = {
-
+  height: '100%',
+  width: '100%'
 }
 
 @Radium
@@ -56,11 +57,13 @@ class App extends Component {
 
   render () {
     return (
-      <div>
+      <div style={appStyles}>
         {/* <Distance points={23} /> */}
         <Loop>
-          <Stage width={1024} height={576}>
-            <Enemy />
+          <Stage width={1024} height={576} style={{ position: 'static' }}>
+            <World>
+              <Enemy />
+            </World>
           </Stage>
         </Loop>
       </div>

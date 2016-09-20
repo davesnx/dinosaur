@@ -1,14 +1,23 @@
 import React from 'react'
-import { Sprite } from 'react-game-kit'
+import { Body, Sprite } from 'react-game-kit'
 
-const Enemy = () => {
+const Enemy = ({ body, sprite }) => {
   return (
-    <Sprite
-      repeat
-      src='assets/megaman.png'
-      state={0}
-      steps={[9, 9, 0, 4, 5]}
-    />
+    <Body
+      ref={(node) => { console.log('node', node) }}
+      args={[20, 50, 100]}
+      inertia={Infinity}
+      {...body}
+    >
+      <Sprite
+        repeat
+        src='assets/megaman.png'
+        ticksPerFrame={1}
+        scale={1}
+        steps={[9, 9, 0, 4, 5]}
+        {...sprite}
+      />
+    </Body>
   )
 }
 
