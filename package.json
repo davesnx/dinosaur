@@ -12,7 +12,7 @@
     "start": "webpack-dev-server",
     "launch": "node app/server",
     "build": "webpack -p",
-    "test": "mocha",
+    "test": "echo 'There are not tests :('",
     "lint": "standard | snazzy"
   },
   "dependencies": {
