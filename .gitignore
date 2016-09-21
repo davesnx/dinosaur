@@ -49,10 +49,8 @@ coverage
 # nodemon
 .monitor
 
-# dist directory
-dist/
-public/
-reduxSrc/
-old_client/
+dist
+public
+old_client
 
 .env
