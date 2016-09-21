@@ -2,11 +2,12 @@ import React, { Component } from 'react'
 import { render } from 'react-dom'
 import Radium from 'radium'
 import { Loop, Stage, World } from 'react-game-kit'
-import Konva from 'konva'
+import Matter from 'matter-js'
 
 // import Background from './Background'
 // import Distance from './Distance'
 import Enemy from './Enemy'
+import Dinosaur from './Dinosaur'
 
 const appStyles = {
   height: '100%',
@@ -17,24 +18,9 @@ const appStyles = {
 class App extends Component {
   constructor (props) {
     super(props)
-    this.state = {
-      color: 'green'
-    }
-
-    this.ticks = [
-      {
-        lola: 1
-      }, {
-        lola: 1
-      }, {
-        lola: 1
-      }, {
-        lola: 1
-      }
-    ]
-
-    this.handleClick = this.handleClick.bind(this)
     this.handleKeyDown = this.handleKeyDown.bind(this)
+    this.getWrapperStyles = this.getWrapperStyles.bind(this)
+    this.physicsInit = this.physicsInit.bind(this)
   }
 
   handleKeyDown (event) {
@@ -49,10 +35,28 @@ class App extends Component {
     window.removeEventListener('keydown', this.handleKeyDown)
   }
 
-  handleClick () {
-    this.setState({
-      color: Konva.Util.getRandomColor()
-    })
+  physicsInit (engine) {
+    console.log('engine', engine)
+    const ground = Matter.Bodies.rectangle(
+      512 * 3, 448,
+      1024 * 3, 64,
+      {
+        isStatic: true
+      }
+    )
+
+    Matter.World.addBody(engine.world, ground)
+  }
+
+  getWrapperStyles () {
+    console.log('this.state', this.state)
+    // const x = Math.round(this.state.x * this.context.scale)
+
+    return {
+      width: '1024px',
+      height: '560px',
+      transform: 'none'
+    }
   }
 
   render () {
@@ -60,8 +64,9 @@ class App extends Component {
       <div style={appStyles}>
         {/* <Distance points={23} /> */}
         <Loop>
-          <Stage width={1024} height={576} style={{ position: 'static' }}>
-            <World>
+          <Stage
+            style={this.getWrapperStyles()}>
+            <World onInit={this.physicsInit}>
               <Enemy />
             </World>
           </Stage>
