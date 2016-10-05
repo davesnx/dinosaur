@@ -1,12 +1,12 @@
 import React, { Component } from 'react'
 import { render } from 'react-dom'
 import Radium from 'radium'
-import { Loop, Stage, World } from 'react-game-kit'
+import { Loop, Stage, World, TileMap } from 'react-game-kit'
 import Matter from 'matter-js'
 
 // import Background from './Background'
 // import Distance from './Distance'
-import Enemy from './Enemy'
+import EnemyCollection from './EnemyCollection'
 import Dinosaur from './Dinosaur'
 
 const appStyles = {
@@ -50,7 +50,6 @@ class App extends Component {
 
   getWrapperStyles () {
     console.log('this.state', this.state)
-    // const x = Math.round(this.state.x * this.context.scale)
 
     return {
       width: '1024px',
@@ -67,7 +66,8 @@ class App extends Component {
           <Stage
             style={this.getWrapperStyles()}>
             <World onInit={this.physicsInit}>
-              <Enemy />
+              {/* <Dinosaur /> */}
+              <EnemyCollection />
             </World>
           </Stage>
         </Loop>
