@@ -16,6 +16,6 @@ if (NODE_ENV === 'production') {
 new WebpackDevServer(config)
   .listen(PORT, 'localhost', (err, result) => {
     if (err) console.log(err)
-    console.log('Listening at http://localhost:4567/')
+    console.log(`Listening at http://localhost:${PORT}/`)
   }
 )

@@ -1,22 +1,34 @@
 import { observable } from 'mobx'
-import { START } from 'constants'
+import { START, GAME_SIZE, DINO_SIZE } from './constants'
 
-class GameStore {
-  @observable game = {
-    status: START,
-    level: 0
+class AppStore {
+  constructor () {
+    setInterval(() => {
+      this.distance += 10
+    }, 200)
   }
 
-  @observable distance = {
-    x: 0
-  }
-
+  @observable status = START
+  @observable level = 0
+  @observable distance = 0
   @observable dinosaur = {
     alive: true,
     position: {
-      y: 0
+      x: 0,
+      y: GAME_SIZE.HEIGHT - DINO_SIZE.HEIGHT
     }
   }
+
+  jump () {
+    this.dinosaur.position.y -= 10
+  }
+
+  @observable enemies = [
+    {
+      position: 0,
+      size: 1
+    }
+  ]
 }
 
-export default new GameStore()
+export default AppStore

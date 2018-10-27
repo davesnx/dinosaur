@@ -1,12 +1,19 @@
-import React from 'react'
+import React, { Component, PropTypes } from 'react'
 import fill from 'zero-fill'
 
-const Distance = ({ points }) => {
-  return (
-    <div className='c-distance'>
-      <p>Score: {fill(5, points)}</p>
-    </div>
-  )
+class Distance extends Component {
+  static contextTypes = {
+    loop: PropTypes.object,
+    scale: PropTypes.number
+  }
+
+  render () {
+    return (
+      <div>
+        <p>Score: {fill(5, this.props.points)}</p>
+      </div>
+    )
+  }
 }
 
 export default Distance

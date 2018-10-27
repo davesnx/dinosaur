@@ -25,6 +25,7 @@
     "body-parser": "^1.15.0",
     "classnames": "^2.2.0",
     "css-loader": "^0.23.0",
+    "data-driven-motion": "0.0.10",
     "dotenv": "^2.0.0",
     "express": "^4.13.3",
     "history": "^1.17.0",
@@ -40,9 +41,12 @@
     "react-hot-loader": "^3.0.0-beta.3",
     "react-konva": "^1.0.5",
     "react-redux": "^4.0.0",
+    "react-retina": "0.0.0",
     "redux": "^3.0.4",
     "redux-logger": "^2.6.1",
+    "standard": "^6.0.8",
     "style-loader": "^0.13.0",
+    "uuid": "^3.0.1",
     "zero-fill": "^2.2.3"
   },
   "devDependencies": {

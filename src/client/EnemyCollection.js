@@ -1,8 +1,10 @@
 import React, { Component } from 'react'
-import { TileMap } from 'react-game-kit'
-import { autorun } from 'mobx'
+// import { TileMap } from 'react-game-kit'
+// import { autorun } from 'mobx'
 
 // import GameStore from './stores/game-store';
+
+import Enemy from './Enemy'
 
 class EnemyCollection extends Component {
   constructor (props) {
@@ -13,62 +15,20 @@ class EnemyCollection extends Component {
     }
   }
 
-  componentDidMount () {
-    // this.cameraWatcher = autorun(() => {
-    //   const targetX = Math.round(GameStore.stageX * this.context.scale)
-    //   this.setState({
-    //     stageX: targetX
-    //   })
-    // })
-    setInterval(() => {
-      this.setState({
-        stageX: this.state.stageX + 2
-      })
-    }, 200)
-  }
-
-  componentWillReceiveProps (nextProps, nextContext) {
-    // const targetX = Math.round(GameStore.stageX * nextContext.scale)
-    // this.setState({
-    //   stageX: targetX
-    // })
-  }
-
-  componentWillUnmount () {
-    // this.cameraWatcher()
-  }
-
   getWrapperStyles () {
     return {
+      zIndex: 0,
       position: 'absolute',
-      transform: `translate(${0}px, 0px) translateZ(0)`,
+      transform: `translate(${this.state.stageX}px, 0px) translateZ(0)`,
       transformOrigin: 'top left',
-      width: '800px',
-      height: '600px',
-      background: 'red'
+      width: '100%',
+      height: '300px',
+      background: 'yellow'
     }
   }
 
   render () {
-    return (
-      <div style={this.getWrapperStyles()}>
-        <TileMap
-          style={{ top: Math.floor(64 * this.state.stageX) }}
-          src='assets/boardwalktile.png'
-          tileSize={128}
-          columns={24}
-          rows={4}
-          layers={[
-            [
-              0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-              0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-              0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-              1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
-            ]
-          ]}
-        />
-      </div>
-    )
+    return this.props.enemies.map((k, index) => <Enemy key={index}/>)
   }
 }
 
