@@ -1,16 +1,4 @@
-import React, {
-  Fragment,
-  useState,
-  useRef,
-  useEffect,
-  useCallback
-} from 'react'
-
-// import { tween } from 'popmotion'
-
-const width = 500
-const height = 500
-const scale = window.devicePixelRatio
+import React, { Fragment, useRef, useLayoutEffect } from 'react'
 
 let requestAnimationFrame =
   global.requestAnimationFrame ||
@@ -27,7 +15,7 @@ const gameLoop = handle => {
   })
 }
 
-const App = () => {
+const App = ({ width, height, scale }) => {
   const square = {
     size: { x: 10, y: 10 },
     position: { x: 0, y: 200 }
@@ -36,51 +24,44 @@ const App = () => {
   const velocityX = 1
   const velocityY = 0
 
-  const ref = useRef(null)
-  const [color, setColor] = useState('black')
+  const canvas = useRef(null)
 
-  const canvas = ref.current && ref.current.getContext('2d')
-
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (!canvas) {
       return
     }
 
+    const context = canvas.current.getContext('2d')
+
     gameLoop(() => {
-      canvas.clearRect(0, 0, ref.width, ref.height)
+      context.clearRect(0, 0, context.width, context.height)
 
       square.position.x += velocityX
       square.position.y += velocityY
 
       // if the block leaves the canvas on the right side
       // bring it back to the left side
-      if (square.position.x > 500) {
+      if (square.position.x > width) {
         square.position.x = 0
       }
 
-      canvas.fillRect(
+      context.fillRect(
         square.position.x,
         square.position.y,
         square.size.x,
         square.size.y
       )
-
-      // squareRect.fillStyle = color
     })
   })
 
   return (
     <Fragment>
       <canvas
-        ref={ref}
+        ref={canvas}
         style={{ display: 'block', width, height }}
         width={width * scale}
         height={height * scale}
       />
-      <br />
-      <button type='button' onClick={() => setColor('black')}>
-        Start
-      </button>
     </Fragment>
   )
 }
