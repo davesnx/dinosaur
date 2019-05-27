@@ -2,6 +2,7 @@ open Revery;
 open Revery.Math;
 open Revery.UI;
 open Revery.UI.Components;
+
 open Constants;
 open Assets;
 
@@ -290,7 +291,7 @@ let world = {
       (
         hooks,
         <Center>
-          <View onMouseDown={_ => dispatch(Flap)}>
+          <View onKeyPress={_ => dispatch(Flap)} onMouseDown={_ => dispatch(Flap)}>
             <ClipContainer
               width=Constants.width
               height=Constants.height
