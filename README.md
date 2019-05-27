@@ -31,9 +31,10 @@ We'll also have a web environment set up, in case you have trouble getting a loc
 
 ### Roadmap
 > or things that you could do to learn and improve the game
-- Turn time into points
-- Add debug toggle to display/not display the position
-- Add therodactiles: Google Chrome dinosaur game have therodactiles that flies against the dinosaur when you cross 500 points.
+- Refactor anything!
+- Add speed incrementation
+- Add enemyGap decrementation
+- Add another kind of enemy: "therodactiles". Google Chrome dinosaur game have therodactiles that flies against the dinosaur when you cross 500 points.
 
 ## License
 
