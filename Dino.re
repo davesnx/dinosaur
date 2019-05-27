@@ -2,78 +2,27 @@ open Revery;
 open Revery.Math;
 open Revery.UI;
 open Revery.UI.Components;
+open Constants;
+open Assets;
 
-module Assets = {
-  module Sky = {
-    let height = 128;
-    let width = 256;
-    let image = "sky.png";
-  };
-  module Pipe = {
-    let width = 90;
-    let height = 480;
-    let imageUp = "PipeUp.png";
-    let imageDown = "PipeDown.png";
-  };
-  module Bird = {
-    let height = 32;
-    let width = 32;
-    let image01 = "bird-01.png";
-    let image02 = "bird-02.png";
-    let image03 = "bird-03.png";
-    let image04 = "bird-04.png";
-  };
-  module Land = {
-    let image = "land.png";
-    let width = 256;
-    let height = 32;
-  };
-};
-module Constants = {
-  let gravity = 2000.0;
-  let floorHeight = 32;
-  let flapForce = (-250.0);
+let dino = (~children as _, ~y, ~isJumping, ()) => {
+  let image = isJumping ? Assets.Dino.image01 : Assets.Dino.image02;
 
-  /* Speed (float) - horizontal speed of the flappy bird */
-  let speedF = 100.;
-
-  /* width (int) - the width of our 'game surface' */
-  let width = 800;
-  let height = 600;
-
-  let birdX = 50;
-  let pipeGap = 200;
-};
-
-let bird = (~children as _, ~y, ~time, ~velocity, ()) => {
-  let angle = velocity /. 1000. *. pi;
-  let halfPi = pi /. 2.;
-  let angle = min(halfPi, angle);
-  let angle = max((-1.) *. halfPi, angle);
-
-  let frame = int_of_float(time *. 8.) mod 4;
-  let src =
-    switch (frame) {
-    | 1 => Assets.Bird.image02
-    | 2 => Assets.Bird.image03
-    | 3 => Assets.Bird.image04
-    | _ => Assets.Bird.image01
-    };
-  <Positioned top=y left=Constants.birdX>
+  <Positioned top=y left=Constants.dinoX>
     <Image
-      src
-      width=Assets.Bird.width
-      height=Assets.Bird.height
-      style=Style.[transform([Transform.Rotate(Radians(angle))])]
+      src=image
+      width=Assets.Dino.width
+      height=Assets.Dino.height
     />
-  </Positioned>;
+  </Positioned>
 };
 
 let ground = (~children as _, ~time, ()) => {
   let parallax =
     (-1.0)
-    *. mod_float(time *. Constants.speedF, float_of_int(Assets.Land.width))
+    *. mod_float(time *. Constants.speed, float_of_int(Assets.Land.width))
     |> int_of_float;
+
   <Positioned bottom=0 left=0>
     <Stack width=Constants.width height=Constants.floorHeight>
       <Positioned bottom=0 left=parallax>
@@ -96,7 +45,7 @@ let ground = (~children as _, ~time, ()) => {
   </Positioned>;
 };
 
-let sky = (~children as _, ()) => {
+let sky = (~children as _, ()) =>
   <Positioned bottom=0 left=0>
     <Image
       src=Assets.Sky.image
@@ -105,7 +54,6 @@ let sky = (~children as _, ()) => {
       resizeMode=ImageResizeMode.Repeat
     />
   </Positioned>;
-};
 
 let textStyle =
   Style.[
@@ -115,197 +63,204 @@ let textStyle =
   ];
 
 module State = {
-  module Bird = {
+  module Dino = {
     type t = {
       position: float,
       velocity: float,
       acceleration: float,
+      isJumping: bool,
     };
 
     let minimumPosition =
       Constants.height
       - Assets.Land.height
-      - Assets.Bird.height
+      - Assets.Dino.height
       |> float_of_int;
 
-    let initialState: t = {position: 300., velocity: 100., acceleration: 0.};
-
-    let isOnGround = (bird: t, time: float) => {
-      bird.position +. bird.velocity *. time > minimumPosition;
+    let initialState: t = {
+      position: 150.,
+      velocity: 100.,
+      acceleration: 0.,
+      isJumping: false,
     };
 
-    let applyGravity = (~bound=true, time: float, bird: t) => {
-      let velocity = bird.velocity +. bird.acceleration *. time;
-      let acceleration = bird.acceleration +. Constants.gravity *. time;
-      let newPosition = bird.position +. bird.velocity *. time;
-      let position = bound ? min(minimumPosition, newPosition) : newPosition;
-      {position, velocity, acceleration};
-    };
+    let applyGravity = (time: float, dino: t) => {
+      let velocity = dino.velocity +. dino.acceleration *. time;
+      let acceleration = dino.acceleration +. Constants.gravity *. time;
+      let position =
+        min(minimumPosition, dino.position +. dino.velocity *. time);
 
-    let flap = (bird: t) => {
       {
-        position: bird.position,
-        velocity: Constants.flapForce,
-        acceleration: 0.,
+        position,
+        velocity,
+        acceleration,
+        isJumping: position != minimumPosition,
       };
     };
 
-    let getRectangle = (bird: t) => {
-      let x = Constants.birdX |> float_of_int;
-      let y = bird.position;
-      let width = Assets.Bird.width |> float_of_int;
-      let height = Assets.Bird.height |> float_of_int;
+    let flap = (dino: t) => {
+      ...dino,
+      position: dino.position,
+      velocity: Constants.flapForce,
+      acceleration: 0.,
+    };
+
+    let getRectangle = (dino: t) => {
+      let x = Constants.dinoX |> float_of_int;
+      let y = dino.position;
+      let width = Assets.Dino.width |> float_of_int;
+      let height = Assets.Dino.height |> float_of_int;
       Rectangle.create(~x, ~y, ~width, ~height, ());
     };
   };
 
-  module Pipe = {
+  module Enemy = {
+    type size =
+      | Big
+      | Small;
+
     type t = {
-      top: Revery.Math.Rectangle.t,
-      bottom: Revery.Math.Rectangle.t,
+      width: Revery.Math.Rectangle.t,
+      height: Revery.Math.Rectangle.t,
+      kind: size,
+      image: string,
     };
 
-    let create = (~x, ~height as h, ()) => {
-      let width = Assets.Pipe.width |> float_of_int;
-      let height = Assets.Pipe.height |> float_of_int;
-      let almostRect = Rectangle.create(~x, ~width, ~height);
+    let create = (~x, ~enemyKind, ()) => {
+      let kind = enemyKind ? Big : Small;
 
-      let topY =
-        float_of_int(Constants.height - Constants.pipeGap) -. h -. height;
-      let bottomY = float_of_int(Constants.height) -. h;
+      let width =
+        enemyKind ?
+          float_of_int(Assets.Enemy.Small.width) :
+          float_of_int(Assets.Enemy.Big.width);
 
-      let top = almostRect(~y=topY, ());
-      let bottom = almostRect(~y=bottomY, ());
-      {top, bottom};
+      let height =
+        enemyKind ?
+          float_of_int(Assets.Enemy.Small.height) :
+          float_of_int(Assets.Enemy.Big.height);
+
+      let image = enemyKind
+        ? Assets.Enemy.Small.image
+        : Assets.Enemy.Big.image;
+
+      let y = float_of_int(Constants.height) -. height;
+
+      let almostRect = Rectangle.create(~x, ~y, ());
+
+      {
+        width: almostRect(~width, ~height),
+        height: almostRect(~width, ~height),
+        kind,
+        image,
+      };
     };
 
-    let getX = (pipe: t) => {
-      Rectangle.getX(pipe.top);
+    let getX = (enemy: t) => Rectangle.getX(enemy.width);
+
+    let step = (t: float, enemy: t) => {
+      let translate = Rectangle.translate(~x=Constants.speed *. t *. (-1.));
+      {
+        ...enemy,
+        width: translate(enemy.width),
+        height: translate(enemy.height),
+      };
     };
 
-    let step = (t: float, pipe: t) => {
-      let translate = Rectangle.translate(~x=Constants.speedF *. t *. (-1.));
-      {top: translate(pipe.top), bottom: translate(pipe.bottom)};
+    let collides = (dino: Dino.t, enemy: t) => {
+      let dinoRect = Dino.getRectangle(dino);
+      let y = float_of_int(Constants.height) -. Rectangle.getHeight(enemy.height);
+      let x = Rectangle.getX(enemy.width);
+      let height = Rectangle.getHeight(enemy.height);
+      let width = Rectangle.getWidth(enemy.width);
+
+      let enemy = Rectangle.create(
+        ~x,
+        ~y,
+        ~width,
+        ~height,
+        ()
+      );
+
+      Rectangle.intersects(dinoRect, enemy);
     };
 
-    let willCross = (deltaTime: float, pipe: t) => {
-      let pipeMaxX = getX(pipe) +. float_of_int(Assets.Pipe.width);
-      let birdMaxX = float_of_int(Constants.birdX + Assets.Bird.width);
-      birdMaxX < pipeMaxX
-      && birdMaxX > pipeMaxX
-      -. deltaTime
-      *. Constants.speedF;
-    };
-
-    let willCrossAny = (deltaTime: float, pipes: list(t)) => {
-      List.exists(willCross(deltaTime), pipes);
-    };
-
-    let collides = (bird: Bird.t, pipe: t) => {
-      let birdRect = Bird.getRectangle(bird);
-      Rectangle.intersects(birdRect, pipe.top)
-      || Rectangle.intersects(birdRect, pipe.bottom);
-    };
-
-    let collidesAny = (bird: Bird.t, pipes: list(t)) => {
-      List.exists(collides(bird), pipes);
+    let collidesAny = (dino: Dino.t, enemies: list(t)) => {
+      List.exists(collides(dino), enemies);
     };
   };
 
   type mode =
     | Gameplay
-    | Falling
     | GameOver;
 
   type t = {
-    mode,
-    score: int,
-    pipes: list(Pipe.t),
-    bird: Bird.t,
+    enemies: list(Enemy.t),
+    dino: Dino.t,
     time: float,
+    mode
   };
 
   let initialState: t = {
+    enemies: [],
+    dino: Dino.initialState,
+    time: 0._,
     mode: Gameplay,
-    score: 0,
-    pipes: [],
-    bird: Bird.initialState,
-    time: 0.,
+
   };
+
   type action =
-    | CreatePipe(float)
+    | CreateEnemy(bool)
     | Flap
-    | Step(float);
-
-  let gameplayReducer = (action, state: t) =>
-    switch (action) {
-    | CreatePipe(height) =>
-      let pipe = Pipe.create(~x=float_of_int(Constants.width), ~height, ());
-      let pipes = [pipe, ...state.pipes];
-      {...state, pipes};
-    | Flap => {...state, bird: Bird.flap(state.bird)}
-    | Step(deltaTime) => {
-        mode:
-          Pipe.collidesAny(state.bird, state.pipes)
-          || Bird.isOnGround(state.bird, deltaTime)
-            ? Falling : Gameplay,
-        score:
-          Pipe.willCrossAny(deltaTime, state.pipes)
-            ? state.score + 1 : state.score,
-        pipes: List.map(Pipe.step(deltaTime), state.pipes),
-        bird: Bird.applyGravity(deltaTime, state.bird),
-        time: state.time +. deltaTime,
-      }
-    };
-
-  let fallingReducer = (action, state: t) =>
-    switch (action) {
-    | Step(deltaTime) => {
-        ...state,
-        bird: Bird.applyGravity(~bound=false, deltaTime, state.bird),
-        mode: Bird.isOnGround(state.bird, deltaTime) ? GameOver : Falling,
-      }
-    | _ => state
-    };
+    | Step(float)
+    | None;
 
   let gameOverReducer = (action, state) =>
     switch (action) {
-    | Flap => initialState
-    | _ => state
+      | Flap => initialState
+      | _ => state
     };
+
+  let gameplayReducer = (action, state: t) =>
+    switch (action) {
+    | CreateEnemy(enemyKind) =>
+      let enemy =
+        Enemy.create(~x=float_of_int(Constants.width), ~enemyKind, ());
+      let enemies = [enemy, ...state.enemies];
+      {...state, enemies};
+    | Flap =>
+      state.dino.isJumping ? state : {...state, dino: Dino.flap(state.dino)}
+    | Step(deltaTime) => {
+        enemies: List.map(Enemy.step(deltaTime), state.enemies),
+        dino: Dino.applyGravity(deltaTime, state.dino),
+        time: state.time +. deltaTime,
+        mode: Enemy.collidesAny(state.dino, state.enemies)
+            ? GameOver : Gameplay
+      }
+    | None => state
+    };
+
 
   let reducer = (action, state: t) =>
-    switch (state.mode) {
+  switch (state.mode) {
     | Gameplay => gameplayReducer(action, state)
-    | Falling => fallingReducer(action, state)
     | GameOver => gameOverReducer(action, state)
-    };
+  };
 };
 
-let pipe = (~children as _, ~pipe: State.Pipe.t, ()) => {
-  let x = State.Pipe.getX(pipe) |> int_of_float;
+let enemy = (~children as _, ~enemy: State.Enemy.t, ()) => {
+  let x = State.Enemy.getX(enemy) |> int_of_float;
+  let width = enemy.width |> Rectangle.getWidth |> int_of_float;
+  let height = enemy.height |> Rectangle.getHeight |> int_of_float;
+  let image = enemy.image;
 
-  let topY = Rectangle.getY(pipe.top) |> int_of_float;
-  let bottomY = Rectangle.getY(pipe.bottom) |> int_of_float;
+  let top = Rectangle.getY(enemy.height) |> int_of_float;
 
-  <Positioned top=0 left=x>
-    <Stack width=Assets.Pipe.width height=Constants.height>
-      <Positioned top=topY left=0>
-        <Image
-          src=Assets.Pipe.imageDown
-          width=Assets.Pipe.width
-          height=Assets.Pipe.height
-        />
-      </Positioned>
-      <Positioned top=bottomY left=0>
-        <Image
-          src=Assets.Pipe.imageUp
-          width=Assets.Pipe.width
-          height=Assets.Pipe.height
-        />
-      </Positioned>
-    </Stack>
-  </Positioned>;
+  <View>
+    <Positioned top left=x>
+      <Image src=image width height />
+    </Positioned>
+  </View>
+  ;
 };
 
 let world = {
@@ -316,23 +271,21 @@ let world = {
       let (state, dispatch, hooks) =
         Hooks.reducer(~initialState=State.initialState, State.reducer, hooks);
 
-      let pipes = List.map(p => <pipe pipe=p />, state.pipes);
-
       let hooks =
         Hooks.tick(
           ~tickRate=Seconds(0.),
           t => dispatch(Step(Time.toSeconds(t))),
           hooks,
         );
+
       let hooks =
         Hooks.tick(
           ~tickRate=Seconds(4.),
-          _ =>
-            dispatch(
-              CreatePipe(Random.float(float_of_int(Assets.Pipe.height))),
-            ),
+          _ => dispatch(CreateEnemy(Random.bool())),
           hooks,
         );
+
+      let enemies = List.map(p => <enemy enemy=p />, state.enemies);
 
       (
         hooks,
@@ -344,15 +297,18 @@ let world = {
               color=Colors.cornflowerBlue>
               <sky />
               <ground time={state.time} />
-              <View> ...pipes </View>
-              <bird
-                y={int_of_float(state.bird.position)}
-                time={state.time}
-                velocity={state.bird.velocity}
+              <View> ...enemies </View>
+              <dino
+                isJumping={state.dino.isJumping}
+                y={int_of_float(state.dino.position)}
               />
               <Text
                 style=textStyle
-                text={"Score: " ++ string_of_int(state.score)}
+                text={"Time: " ++ string_of_float(state.time)}
+              />
+              <Text
+                style=textStyle
+                text={"Position: " ++ string_of_float(state.dino.position)}
               />
             </ClipContainer>
           </View>

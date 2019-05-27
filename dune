@@ -1,6 +1,6 @@
 (executables
-    (names Dino Constants)
+    (names Dino Constants Assets)
     (package App)
-    (public_names Dino Constants)
+    (public_names Dino Constants Assets)
     (libraries App.playground bigarray reglfw Revery)
 )
