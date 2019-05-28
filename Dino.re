@@ -280,7 +280,7 @@ let world = {
       (
         hooks,
         <Center>
-          <View onKeyPress={_ => dispatch(Flap)} onMouseDown={_ => dispatch(Flap)}>
+          <View ref={r => Focus.focus(r)} onKeyPress={_ => dispatch(Flap)} onMouseDown={_ => dispatch(Flap)}>
             <ClipContainer
               width=Constants.width
               height=Constants.height
