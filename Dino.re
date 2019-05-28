@@ -6,8 +6,14 @@ open Revery.UI.Components;
 open Constants;
 open Assets;
 
-let dino = (~children as _, ~y, ~isJumping, ()) => {
-  let image = isJumping ? Assets.Dino.image01 : Assets.Dino.image02;
+let dino = (~children as _, ~y, ~isJumping, ~hasCollisioned, ~time, ()) => {
+  let image = switch (time mod 3, hasCollisioned, isJumping) {
+    | (0, false, false) => Assets.Dino.image01
+    | (1, false, false) => Assets.Dino.image02
+    | (2, false, false) => Assets.Dino.image03
+    | (3, false, false) => Assets.Dino.image02
+    | (_, true) => Assets.Dino.image04
+  };
 
   <Positioned top=y left=Constants.dinoX>
     <Image
@@ -18,32 +24,15 @@ let dino = (~children as _, ~y, ~isJumping, ()) => {
   </Positioned>
 };
 
-let ground = (~children as _, ~time, ()) => {
-  let parallax =
-    (-1.0)
-    *. mod_float(time *. Constants.speed, float_of_int(Assets.Land.width))
-    |> int_of_float;
-
+let ground = (~children as _, ()) => {
   <Positioned bottom=0 left=0>
-    <Stack width=Constants.width height=Constants.floorHeight>
-      <Positioned bottom=0 left=parallax>
-        <Image
-          src=Assets.Land.image
-          width=Constants.width
-          height=Assets.Land.height
-          resizeMode=ImageResizeMode.Repeat
-        />
-      </Positioned>
-      <Positioned bottom=0 left={parallax + Assets.Land.width}>
-        <Image
-          src=Assets.Land.image
-          width=Constants.width
-          height=Assets.Land.height
-          resizeMode=ImageResizeMode.Repeat
-        />
-      </Positioned>
-    </Stack>
-  </Positioned>;
+    <Image
+      src=Assets.Land.image
+      width=Constants.width
+      height=Assets.Land.height
+      resizeMode=ImageResizeMode.Repeat
+    />
+  </Positioned>
 };
 
 let sky = (~children as _, ()) =>
@@ -296,11 +285,13 @@ let world = {
               width=Constants.width
               height=Constants.height
               color=Colors.cornflowerBlue>
-              <sky />
-              <ground time={state.time} />
+              // <sky />
+              <ground />
               <View> ...enemies </View>
               <dino
+                time={int_of_float(state.time)}
                 isJumping={state.dino.isJumping}
+                hasCollisioned={state.mode == GameOver}
                 y={int_of_float(state.dino.position)}
               />
               <Text

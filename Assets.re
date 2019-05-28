@@ -6,27 +6,27 @@ module Assets = {
   };
   module Enemy = {
     module Small = {
-      let width = 35;
-      let height = 55;
-      let image = "PipeUp.png";
+      let width = 38;
+      let height = 42;
+      let image = "Cactus.png";
     };
     module Big = {
-      let width = 55;
-      let height = 70;
-      let image = "PipeUp.png";
+      let width = 35;
+      let height = 57;
+      let image = "Cactus.png";
     };
   };
   module Dino = {
-    let height = 32;
-    let width = 32;
-    let image01 = "bird-01.png";
-    let image02 = "bird-02.png";
-    let image03 = "bird-03.png";
-    let image04 = "bird-04.png";
+    let height = 48;
+    let width = 48;
+    let image01 = "Dino.png";
+    let image02 = "Dino-step.png";
+    let image03 = "Dino-jump.png";
+    let image04 = "Dino-death.png";
   };
   module Land = {
-    let image = "land.png";
-    let width = 256;
-    let height = 32;
+    let image = "floor.png";
+    let width = 600;
+    let height = 8;
   };
 };
