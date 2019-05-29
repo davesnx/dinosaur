@@ -341,6 +341,10 @@ let world = {
             style=textStyle
             text={"Time: " ++ string_of_int(int_of_float(state.time))}
           />
+          <Text
+            style=textStyle
+            text={"Press click to jump"}
+          />
           <View ref={r => Focus.focus(r)} onKeyPress={_ => dispatch(Flap)} onMouseDown={_ => dispatch(Flap)}>
             <ClipContainer
               width=Constants.width
