@@ -41,3 +41,5 @@ We'll also have a web environment set up, in case you have trouble getting a loc
 ## License
 
 [MIT License](LICENSE)
+
+PS: All the assets comes from some dribble that I downloaded ages ago. Don't know the source, I just created the animation of the Dino :D
