@@ -1,8 +1,8 @@
 module Assets = {
   module Sky = {
-    let height = 128;
-    let width = 256;
-    let image = "sky.png";
+    let height = 31;
+    let width = 87;
+    let image = "Cloud.png";
   };
   module Enemy = {
     module Small = {
@@ -17,16 +17,19 @@ module Assets = {
     };
   };
   module Dino = {
-    let height = 48;
-    let width = 48;
-    let image01 = "Dino.png";
-    let image02 = "Dino-step.png";
-    let image03 = "Dino-jump.png";
-    let image04 = "Dino-death.png";
+    let height = 60;
+    let width = 60;
+
+    module Images = {
+      let default = "Dino.png";
+      let step = "Dino-step.png";
+      let jump = "Dino-jump.png";
+      let death = "Dino-death.png";
+    }
   };
   module Land = {
     let image = "floor.png";
     let width = 600;
-    let height = 8;
+    let height = 4;
   };
 };

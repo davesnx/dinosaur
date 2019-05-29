@@ -1,5 +1,5 @@
 (install
     (section bin)
     (package App)
-    (files Roboto-Regular.ttf floor.png Cactus.png Dino.png Dino-step.png Dino-jump.png Dino-death.png sky.png)
+    (files Roboto-Regular.ttf floor.png Cactus.png Dino.png Dino-step.png Dino-jump.png Dino-death.png Cloud.png)
 )

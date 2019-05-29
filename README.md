@@ -1,11 +1,9 @@
-### Dinosaur game build with Revery
+## Dinosaur game build with Revery
 The main idea of this repo was to learn Revery and native ReasonML.
 
 The code is based on the Workshop made by [Revery's team](https://github.com/revery-ui) at React Europe 2019 ([@brianphelps](https://github.com/bryphe), [@wokalski](https://github.com/wokalski) & [@rauanmayemir](https://github.com/rauanmayemir)). It consisted on create a Flappy Bird clone [revery-ui/revery-workshop](https://github.com/revery-ui/revery-workshop). I turn it into the famous [Chrome "No internet connection" Dino game](chrome://dino)!
 
-Many thanks for the assets [DINO ASSETS]
-
-## Run it locally
+### Run it locally
 
 **Pre-requisities**
 

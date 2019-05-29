@@ -1,3 +1,6 @@
+
+open Revery;
+
 module Constants = {
   let gravity = 2000.0;
   let floorHeight = 32;
@@ -12,4 +15,6 @@ module Constants = {
 
   let dinoX = 40;
   let enemyGap = 200;
+
+  let backgroundColor = Color.hex("#E8E8E8");
 };
