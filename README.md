@@ -33,9 +33,10 @@ It consisted on create a Flappy Bird clone [revery-ui/revery-workshop](https://g
 ### Roadmap
 > or things that you could do to learn and improve the game
 - Refactor anything!
-- Add Dark mode
 - Add horizontal speed incrementation
 - Add enemies gap decrementation
+- Add unit tests with rely https://reason-native.com/docs/rely/
+- Add Dark mode
 - Add another kind of enemy: "therodactiles". Google Chrome dinosaur game have therodactiles that flies against the dinosaur when you cross 500 points.
 
 ## License
