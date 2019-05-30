@@ -1,7 +1,7 @@
 {
-  "name": "revery-workshop",
-  "version": "1.3.0",
-  "description": "Revery Workshop",
+  "name": "dinosaur",
+  "version": "1.0.0",
+  "description": "dinosaur",
   "license": "MIT",
   "esy": {
     "build": "refmterr dune build -p App"

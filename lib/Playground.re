@@ -10,7 +10,7 @@ let render = (elem) => {
 							~height=600,
 							(),
 					);
-			let win = App.createWindow(~createOptions, app, "FlappyRevery");
+			let win = App.createWindow(~createOptions, app, "Dinosaur Revery");
 
 			let _ = UI.start(win, elem);
 			();

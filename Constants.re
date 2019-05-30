@@ -6,11 +6,9 @@ module Constants = {
   let floorHeight = 32;
   let flapForce = -300.0;
 
-  /* Speed - horizontal speed of the flappy bird */
-  let speed = 200.;
+  let speed = 200.; /* Speed - horizontal speed */
 
-  /* width - the width of our 'game surface' */
-  let width = 600;
+  let width = 600; /* 'game surface' width */
   let height = 300;
 
   let dinoX = 40;
