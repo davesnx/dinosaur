@@ -7,23 +7,21 @@ open Constants;
 open Assets;
 
 let dino = (~children as _, ~y, ~isJumping, ~hasCollisioned, ~time, ()) => {
-  let image = switch (isJumping, hasCollisioned) {
+  let image =
+    switch (isJumping, hasCollisioned) {
     | (_, true) => Assets.Dino.Images.death
     | (true, _) => Assets.Dino.Images.jump
-    | _ => switch (time mod 2) {
+    | _ =>
+      switch (time mod 2) {
       | 0 => Assets.Dino.Images.step
       // | 1 => Assets.Dino.Images.step2
       | 1 => Assets.Dino.Images.default
+      }
     };
-  };
 
   <Positioned top=y left=Constants.dinoX>
-    <Image
-      src=image
-      width=Assets.Dino.width
-      height=Assets.Dino.height
-    />
-  </Positioned>
+    <Image src=image width=Assets.Dino.width height=Assets.Dino.height />
+  </Positioned>;
 };
 
 let ground = (~children as _, ()) => {
@@ -33,7 +31,7 @@ let ground = (~children as _, ()) => {
       width=Constants.width
       height=Assets.Land.height
     />
-  </Positioned>
+  </Positioned>;
 };
 
 let textStyle =
@@ -96,9 +94,7 @@ module State = {
   };
 
   module Cloud = {
-    type t = {
-      rect: Revery.Math.Rectangle.t,
-    }
+    type t = {rect: Revery.Math.Rectangle.t};
 
     let create = (~x) => {
       let width = Assets.Sky.width |> float_of_int;
@@ -107,17 +103,13 @@ module State = {
       let x = float_of_int(Constants.width);
       let cloud = Rectangle.create(~x, ~y, ~width, ~height, ());
 
-      {
-        rect: cloud
-      };
+      {rect: cloud};
     };
 
     let step = (t: float, cloud: t) => {
       let translate = Rectangle.translate(~x=Constants.speed *. t *. (-1.));
 
-      {
-        rect: translate(cloud.rect)
-      };
+      {rect: translate(cloud.rect)};
     };
   };
 
@@ -136,53 +128,39 @@ module State = {
       let kind = enemyKind ? Big : Small;
 
       let width =
-        enemyKind ?
-          float_of_int(Assets.Enemy.Small.width) :
-          float_of_int(Assets.Enemy.Big.width);
+        enemyKind
+          ? float_of_int(Assets.Enemy.Small.width)
+          : float_of_int(Assets.Enemy.Big.width);
 
       let height =
-        enemyKind ?
-          float_of_int(Assets.Enemy.Small.height) :
-          float_of_int(Assets.Enemy.Big.height);
+        enemyKind
+          ? float_of_int(Assets.Enemy.Small.height)
+          : float_of_int(Assets.Enemy.Big.height);
 
-      let image = enemyKind
-        ? Assets.Enemy.Small.image
-        : Assets.Enemy.Big.image;
+      let image =
+        enemyKind ? Assets.Enemy.Small.image : Assets.Enemy.Big.image;
 
       let y = float_of_int(Constants.height) -. height;
 
-      {
-        rect: Rectangle.create(~x, ~y, ~width, ~height, ()),
-        kind,
-        image,
-      };
+      {rect: Rectangle.create(~x, ~y, ~width, ~height, ()), kind, image};
     };
 
     let getX = (enemy: t) => Rectangle.getX(enemy.rect);
 
     let step = (t: float, enemy: t) => {
       let translate = Rectangle.translate(~x=Constants.speed *. t *. (-1.));
-      {
-        ...enemy,
-        rect: translate(enemy.rect),
-      };
+      {...enemy, rect: translate(enemy.rect)};
     };
 
     let collides = (dino: Dino.t, enemy: t) => {
-      let enemyHeght = Rectangle.getHeight(enemy.rect)
+      let enemyHeght = Rectangle.getHeight(enemy.rect);
       let y = float_of_int(Constants.height) -. enemyHeght;
       let x = Rectangle.getX(enemy.rect);
       let height = enemyHeght;
       let width = Rectangle.getWidth(enemy.rect);
       let dinoRect = Dino.getRectangle(dino);
 
-      let enemy = Rectangle.create(
-        ~x,
-        ~y,
-        ~width,
-        ~height,
-        ()
-      );
+      let enemy = Rectangle.create(~x, ~y, ~width, ~height, ());
 
       Rectangle.intersects(dinoRect, enemy);
     };
@@ -201,17 +179,15 @@ module State = {
     clouds: list(Cloud.t),
     dino: Dino.t,
     time: float,
-    mode
+    mode,
   };
 
   let initialState: t = {
     enemies: [],
-    clouds: [
-      Cloud.create()
-    ],
+    clouds: [Cloud.create()],
     dino: Dino.initialState,
     time: 0._,
-    mode: Gameplay
+    mode: Gameplay,
   };
 
   type action =
@@ -223,8 +199,8 @@ module State = {
 
   let gameOverReducer = (action, state) =>
     switch (action) {
-      | Flap => initialState
-      | _ => state
+    | Flap => initialState
+    | _ => state
     };
 
   let gameplayReducer = (action, state: t) =>
@@ -245,18 +221,17 @@ module State = {
         clouds: List.map(Cloud.step(deltaTime), state.clouds),
         dino: Dino.applyGravity(deltaTime, state.dino),
         time: state.time +. deltaTime,
-        mode: Enemy.collidesAny(state.dino, state.enemies)
-            ? GameOver : Gameplay
+        mode:
+          Enemy.collidesAny(state.dino, state.enemies) ? GameOver : Gameplay,
       }
     | None => state
     };
 
-
   let reducer = (action, state: t) =>
-  switch (state.mode) {
+    switch (state.mode) {
     | Gameplay => gameplayReducer(action, state)
     | GameOver => gameOverReducer(action, state)
-  };
+    };
 };
 
 let enemy = (~children as _, ~enemy: State.Enemy.t, ()) => {
@@ -268,11 +243,8 @@ let enemy = (~children as _, ~enemy: State.Enemy.t, ()) => {
   let top = Rectangle.getY(enemy.rect) |> int_of_float;
 
   <View>
-    <Positioned top left=x>
-      <Image src=image width height />
-    </Positioned>
-  </View>
-  ;
+    <Positioned top left=x> <Image src=image width height /> </Positioned>
+  </View>;
 };
 
 let cloud = (~children as _, ~cloud: State.Cloud.t, ()) => {
@@ -290,17 +262,15 @@ let cloud = (~children as _, ~cloud: State.Cloud.t, ()) => {
 
 let main = (~children, ()) => {
   let style =
-      Style.[
-        flexGrow(1),
-        justifyContent(`Center),
-        alignItems(`Center),
-        backgroundColor(Constants.backgroundColor)
-      ];
+    Style.[
+      flexGrow(1),
+      justifyContent(`Center),
+      alignItems(`Center),
+      backgroundColor(Constants.backgroundColor),
+    ];
 
-  <View style>
-    ...children
-  </View>
-}
+  <View style> ...children </View>;
+};
 
 let world = {
   let component = React.component("world");
@@ -341,11 +311,11 @@ let world = {
             style=textStyle
             text={"Time: " ++ string_of_int(int_of_float(state.time))}
           />
-          <Text
-            style=textStyle
-            text={"Press click to jump"}
-          />
-          <View ref={r => Focus.focus(r)} onKeyPress={_ => dispatch(Flap)} onMouseDown={_ => dispatch(Flap)}>
+          <Text style=textStyle text="Press click to jump" />
+          <View
+            ref={r => Focus.focus(r)}
+            onKeyPress={_ => dispatch(Flap)}
+            onMouseDown={_ => dispatch(Flap)}>
             <ClipContainer
               width=Constants.width
               height=Constants.height

@@ -1,10 +1,9 @@
-
 open Revery;
 
 module Constants = {
   let gravity = 2000.0;
   let floorHeight = 32;
-  let flapForce = -300.0;
+  let flapForce = (-300.0);
 
   let speed = 200.; /* Speed - horizontal speed */
 

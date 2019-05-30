@@ -4,7 +4,9 @@
   "description": "dinosaur",
   "license": "MIT",
   "esy": {
-    "build": "refmterr dune build -p App"
+    "build": "refmterr dune build -p App",
+    "run": "esy x Dino",
+    "lint": "refmt *.re"
   },
   "dependencies": {
     "ocaml": "~4.7.0",

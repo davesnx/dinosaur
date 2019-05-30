@@ -25,7 +25,7 @@ module Assets = {
       let step = "Dino-step.png";
       let jump = "Dino-jump.png";
       let death = "Dino-death.png";
-    }
+    };
   };
   module Land = {
     let image = "floor.png";
