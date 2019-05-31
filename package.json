@@ -4,9 +4,7 @@
   "description": "dinosaur",
   "license": "MIT",
   "esy": {
-    "build": "refmterr dune build -p App",
-    "run": "esy x Dino",
-    "lint": "refmt *.re"
+    "build": "refmterr dune build -p App"
   },
   "dependencies": {
     "ocaml": "~4.7.0",
@@ -21,8 +19,8 @@
     "rebez": "github:jchavarri/rebez#46cbc183"
   },
   "scripts": {
-   "format": "bash -c \"refmt --in-place *.re\"",
-   "run": "esy x Dino"
+   "run": "esy x Dino",
+   "lint": "refmt --in-place *.re"
   },
   "devDependencies": {
     "ocaml": "~4.7.0",
