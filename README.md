@@ -1,6 +1,8 @@
 ## Dinosaur game build with Revery
 
-![](./docs/demo.png)
+<p align="center">
+  <img width="500" src="docs/demo.gif" />
+</p>
 
 The main idea of this repo was to learn Revery and native ReasonML.
 
