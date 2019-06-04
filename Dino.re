@@ -12,10 +12,11 @@ let dino = (~children as _, ~y, ~isJumping, ~hasCollisioned, ~time, ()) => {
     | (_, true) => Assets.Dino.Images.death
     | (true, _) => Assets.Dino.Images.jump
     | _ =>
-      switch (time mod 2) {
+      switch (time mod 1) {
       | 0 => Assets.Dino.Images.step
       // | 1 => Assets.Dino.Images.step2
       | 1 => Assets.Dino.Images.default
+      | _ => Assets.Dino.Images.default
       }
     };
 
@@ -96,7 +97,7 @@ module State = {
   module Cloud = {
     type t = {rect: Revery.Math.Rectangle.t};
 
-    let create = (~x) => {
+    let create = () => {
       let width = Assets.Sky.width |> float_of_int;
       let height = Assets.Sky.height |> float_of_int;
       let y = Random.float(float_of_int(Constants.height) /. 2.);
@@ -211,8 +212,7 @@ module State = {
       let enemies = [enemy, ...state.enemies];
       {...state, enemies};
     | CreateCloud =>
-      let cloud = Cloud.create(~x=float_of_int(Constants.width));
-      let clouds = [cloud, ...state.clouds];
+      let clouds = [Cloud.create(), ...state.clouds];
       {...state, clouds};
     | Flap =>
       state.dino.isJumping ? state : {...state, dino: Dino.flap(state.dino)}
